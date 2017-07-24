@@ -1,6 +1,6 @@
 # IA-Practicas
 
-Resolución de prácticas en Python de la asignatura de [Inteligencia Artificial](http://www.cs.us.es/cursos/iati/).
+Resolución de prácticas en Python de la asignatura [Inteligencia Artificial](http://www.cs.us.es/cursos/iati/).
 
 ## En proceso:
 1. [Práctica 1](https://github.com/EduPH/IA-Practicas/blob/master/practica-01.py): Introducción a Python.
