@@ -1,4 +1,4 @@
-# IA-Practicas
+# IA-Prácticas
 
 Resolución de prácticas en Python de la asignatura [Inteligencia Artificial](http://www.cs.us.es/cursos/iati/).
 
