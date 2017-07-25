@@ -196,7 +196,10 @@ def cuenta_coincidentes(l1,l2):
 # >>> dic_posiciones_coincidentes([2,8,1,2,1,3],[1,8,1,2,1,6])
 # {1: 8, 2: 1, 3: 2, 4: 1}
 
-
+def dic_posiciones_coincidentes(l1,l2):
+    n = len(l1)
+    l3 = {i:l1[i] for i in range(n) if l1[i]==l2[i]}
+    return l3
 
 # -----------
 # EJERCICIO 4
@@ -218,9 +221,14 @@ def cuenta_coincidentes(l1,l2):
 # El 28 es perfecto y sus divisores son [1, 2, 4, 7, 14]
 # ------------------------------------------------------------------------
 
+def divisores(n):
+    divs = [ i for i in range(1,n) if n%i == 0]
+    return divs
 
-
-
+def filtra_perfectos(n,m,p):
+    l1 = [a for a in range(n,m) if p(a)== True and sum(divisores(a)) == a]
+    for i in l1:
+        print("El {0} es perfecto y sus divisores son {1}".format(i,divisores(i)))
 
 
 
@@ -253,8 +261,21 @@ def cuenta_coincidentes(l1,l2):
 #         función "sorted" sobre las claves 
 # ---------------------------------------------------------------------------
 
+def representacion(n):
+    i = 0
+    while i<n:
+        print("*"),
+        i+=1
+ 
 
-
+def histograma_horizontal(d):
+    l1 = sorted(d.keys())
+    n  = len(l1)        
+    for i in l1:
+        print("{0} :".format(i)),
+        representacion(d[i])
+        print("")
+    return
 
 # -----------
 # EJERCICIO 6
@@ -293,6 +314,7 @@ def cuenta_coincidentes(l1,l2):
 # Nota: imprimir las barras, de izquierda a derecha, en el orden que determina la
 #         función "sorted" sobre las claves 
 # ---------------------------------------------------------------------------
+
 
 
 
