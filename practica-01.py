@@ -336,6 +336,31 @@ def histograma_horizontal(d):
 #  >>> compresión(["a", "a", "a", "b", "a", "c", "b", "d", "d", "f", "h", "h", "h"])
 #  [[3, 'a'], 'b', 'a', 'c', 'b', [2, 'd'], 'f', [3, 'h']]
 
+def compresion(l):
+    n= len(l)
+    xs = []
+    t=1
+    for i in range(n):
+        if len(l)>1:
+            if l[0] == l[1]:
+                t += 1
+                l.remove(l[0])
+            else:
+                if t > 1:
+                    xs.append([t,l[0]])
+                    l.remove(l[0])
+                    t=1
+                else:
+                    xs.append(l[0])
+                    l.remove(l[0])
+        else:
+            if t > 1:
+                xs.append([t,l[0]])
+            else:
+                xs.append(l[0])
+    return xs
+                   
+                
 #  
 #  (b) Definir la función descompresión(l) que devuelva la lista l descomprimida,
 #  suponiendo que ha sido comprimida con el método del apartado anterior.
@@ -345,12 +370,16 @@ def histograma_horizontal(d):
 #  [1, 1, 1, 2, 1, 3, 2, 4, 4, 6, 8, 8, 8]
 # ************************************************************************
 
-
-
-
-
-
-
+def descompresion(l):
+    n = len(l)
+    xs = []
+    for i in range(n):
+        if type(l[i]) is list:
+            for k in range(l[i][0]):
+                xs.append(l[i][1])
+        else:
+            xs.append(l[i])
+    return xs
 
 
 # -----------
