@@ -403,10 +403,14 @@ def descompresion(l):
 # función "isinstance". En concreto, "isinstance(x,list)" comprueba si x es
 # una lista.
 # -------------------------------------------------------------------------
-
-
-
-
+ 
+def profundidad(l):
+    t= 0
+    if isinstance(l,list):
+        t = 1 + max([profundidad(l[i]) for i in range(len(l))])
+        return t
+    else:
+        return t
 
 
 # -----------
@@ -429,9 +433,11 @@ def descompresion(l):
 #    especificación el manual)
 # -----------------------------------------------------------------------
 
-
-
-
+def pertenece_prof(x,xs):
+    if isinstance(xs,list):
+        return any([pertenece_prof(x,xs[i]) for i in range(len(xs))])
+    else:
+        return (x == xs)
 
 
 
@@ -462,9 +468,14 @@ def descompresion(l):
 #                                               ^^^^^^^
 # ---------------------------------------------------------------------------
 
-
-
-
+def mi_grep(st,fich):
+    f=open(fich)
+    t=0
+    for line in f:
+        t+=1
+        if st in line:
+            print("Línea {0}:".format(t)),
+            print(line)
 
 
 # ------------
@@ -478,7 +489,7 @@ def descompresion(l):
 # supondremos que no existe rozamiento ni resistencia del viento.
 
 # Diseñar una clase Proyectil que sirva representar el estado del proyectil en
-# un instante de tiempo dado. Para ello, necsitamos al menos los siguientes
+# un instante de tiempo dado. Para ello, necesitamos al menos los siguientes
 # atributos de datos:
 # - Distancia recorrida (en horizontal)
 # - Altura
