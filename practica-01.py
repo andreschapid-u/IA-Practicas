@@ -576,7 +576,7 @@ class proyectil:
         self.ejeX = h0 + vh*t # Actualiza posición eje X
         altInic = self.altura
         vm = (vInic+self.vver)/2
-        self.altura = altInic +vm*t # Actualiza altura
+        self.altura = altInic + vm*t # Actualiza altura
         
     def obten_posX(self):
         return self.ejeX
@@ -588,7 +588,7 @@ def aterriza(altura, velocidad, angulo, intervalo):
     proy = proyectil(altura,velocidad, angulo,0)
     numInt = 0
     altMax = [0]
-    while proy.obten_posY() > 0:
+    while proy.obten_posY() >= 0:
         numInt += 1
         print("Proyectil en posición ({0},{1}) ".format(proy.obten_posX(),proy.obten_posY()))
         proy.actualiza(intervalo)
