@@ -563,10 +563,10 @@ import math
 
 class proyectil:
     def __init__(self, alturaInic, vInic, angulo,ejeX):
+        self.ejeX = ejeX
+        self.altura = alturaInic
         self.vhor = vInic*math.cos(angulo)
         self.vver = vInic*math.sin(angulo)
-        self.altura = alturaInic
-        self.ejeX = ejeX
 
     def actualiza(self,t):
         vInic = self.vver
@@ -575,7 +575,8 @@ class proyectil:
         vh = self.vhor
         self.ejeX = h0 + vh*t # Actualiza posición eje X
         altInic = self.altura
-        self.altura = altInic + vInic*t-(1/2)*9.8*t**2 # Actualiza altura
+        vm = (vInic+self.vver)/2
+        self.altura = altInic +vm*t # Actualiza altura
         
     def obten_posX(self):
         return self.ejeX
@@ -586,13 +587,15 @@ class proyectil:
 def aterriza(altura, velocidad, angulo, intervalo):
     proy = proyectil(altura,velocidad, angulo,0)
     numInt = 0
-    altMax = proy.vver**2/(2*9.8)
+    altMax = [0]
     while proy.obten_posY() > 0:
         numInt += 1
         print("Proyectil en posición ({0},{1}) ".format(proy.obten_posX(),proy.obten_posY()))
         proy.actualiza(intervalo)
+        altMax.append(proy.altura)
+    alturaMax = max(altMax)    
     print("Tras {0} intervalos de {1} segundos ({2} segundos) el proyectil ha aterrizado.".format(numInt, intervalo, numInt*intervalo))
     print("Ha recorrido una distancia de {0} metros.".format(proy.obten_posX()))
-    print("Ha alcanzado una altura máxima de {0} metros.".format(altMax))
+    print("Ha alcanzado una altura máxima de {0} metros.".format(alturaMax))
        
        
