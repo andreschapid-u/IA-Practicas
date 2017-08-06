@@ -1,3 +1,4 @@
+# coding=utf-8
 # practica-02.py
 # Inteligencia Artificial, 
 # Tercer curso del Grado de Ingeniería Informática - Tecnologías Informáticas. 
@@ -106,7 +107,8 @@ class Jarras(Problema):
     de la jarra de 3"""
 
     def __init__(self):
-        super().__init__((0,0))
+        self.estado_inicial = (0,0)
+#        super().__init__((0,0))
 
     def acciones(self,estado):
         jarra_de_4=estado[0]
@@ -262,7 +264,7 @@ class Jarras(Problema):
 
 # No olvidar cargar el módulo con los algoritmos de búsqueda
 
-from algoritmos_de_búsqueda import *
+from algoritmos_de_busqueda import *
 
 
 
