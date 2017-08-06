@@ -318,6 +318,10 @@ from algoritmos_de_busqueda import *
 
 # ------------------------------------------------------------------------------
 
+def h1_ocho_puzzle(estado):
+    estado_final = (1,2,3,8,0,4,7,6,5)
+    l = sum ([1 for i in range(9) if estado[i] == estado_final[i]])
+    return l
 
 
 
