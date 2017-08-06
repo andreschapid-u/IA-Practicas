@@ -175,35 +175,49 @@ class Jarras(Problema):
 # ----------------------------------------------------------------------------
 
 
-# class Ocho_Puzzle(Problema):
-#     """Problema a del 8-puzzle.  Los estados serán tuplas de nueve elementos,
-#     permutaciones de los números del 0 al 8 (el 0 es el hueco). Representan la
-#     disposición de las fichas en el tablero, leídas por filas de arriba a
-#     abajo, y dentro de cada fila, de izquierda a derecha. Por ejemplo, el
-#     estado final será la tupla (1, 2, 3, 8, 0, 4, 7, 6, 5). Las cuatro
-#     acciones del problema las representaremos mediante las cadenas:
-#     "Mover hueco arriba", "Mover hueco abajo", "Mover hueco izquierda" y
-#     "Mover hueco dercha", respectivamente. 
-#     """"
+class Ocho_Puzzle(Problema):
+    """Problema a del 8-puzzle.  Los estados serán tuplas de nueve elementos,
+    permutaciones de los números del 0 al 8 (el 0 es el hueco). Representan la
+    disposición de las fichas en el tablero, leídas por filas de arriba a
+    abajo, y dentro de cada fila, de izquierda a derecha. Por ejemplo, el
+    estado final será la tupla (1, 2, 3, 8, 0, 4, 7, 6, 5). Las cuatro
+    acciones del problema las representaremos mediante las cadenas:
+    "Mover hueco arriba", "Mover hueco abajo", "Mover hueco izquierda" y
+    "Mover hueco derecha", respectivamente."""""
 
-#     def __init__(self,tablero_inicial):
-#         super().__init__(estado_inicial=?????, estado_final=?????)
+    def __init__(self,tablero_inicial):
+        self.estado_inicial = tablero_inicial
+        self.estado_final = (1, 2, 3, 8, 0, 4, 7, 6, 5)
 
-#     def acciones(self,estado):
-#         pos_hueco=estado.index(0)
-#         accs=list()
-#         if pos_hueco not in ?????: 
-#             accs.append(?????)
-#         if pos_hueco not in ?????: 
-#             accs.append(?????)
-#         if pos_hueco not in ?????: 
-#             accs.append(?????)
-#         if pos_hueco not in ?????: 
-#             accs.append(?????)
-#         return accs     
+    def acciones(self,estado):
+        pos_hueco=estado.index(0)
+        accs=list()
+        if pos_hueco not in (0,1,2):
+            accs.append("Mover hueco arriba")
+        if pos_hueco not in (0,3,6): 
+            accs.append("Mover hueco izquierda")
+        if pos_hueco not in (6,7,8): 
+             accs.append("Mover hueco abajo")
+        if pos_hueco not in (2,5,8):
+             accs.append("Mover hueco derecha")
+        return accs     
 
-#     def aplica(self,estado,accion):
-#         ???????
+    def aplica(self,estado,accion):
+        pos_hueco = estado.index(0)
+        l = list(estado)
+        if accion == "Mover hueco arriba":
+            l[pos_hueco] = l[pos_hueco-3]
+            l[pos_hueco-3] = 0
+        if accion == "Mover hueco abajo":
+            l[pos_hueco] = l[pos_hueco+3]
+            l[pos_hueco+3] = 0
+        if accion == "Mover hueco derecha":
+            l[pos_hueco] = l[pos_hueco+1]
+            l[pos_hueco+1] = 0
+        if accion == "Mover hueco izquierda":
+            l[pos_hueco] = l[pos_hueco-1]
+            l[pos_hueco-1] = 0
+        return tuple(l)
 
 # Ejemplos que se pueden ejecutar una vez se ha definido la clase:
 
