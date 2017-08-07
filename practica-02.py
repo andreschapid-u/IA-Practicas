@@ -323,10 +323,31 @@ def h1_ocho_puzzle(estado):
     l = sum ([1 for i in range(9) if estado[i] == estado_final[i]])
     return l
 
-
-
-
-
+def posiciones(estado):
+    '''Función auxiliar que determina las coordenadas de la tupla estado en una mátrix'''
+    l = list()
+    for i in estado:
+        indice = estado.index(i)
+        if indice in (0,1,2):
+            l.append((i,0,estado.index(i)%3))
+        if indice in (3,4,5):
+            l.append((i,1,estado.index(i)%3))
+        if indice in (6,7,8):
+            l.append((i,2,estado.index(i)%3))                   
+    return l
+    
+def h2_ocho_puzzle(estado):
+    estado_final = (1,2,3,8,0,4,7,6,5)
+    final_pos = posiciones(estado_final)
+    estado_pos = posiciones(estado)
+    t = 0
+    for i in final_pos:
+        for j in range(9):
+            if estado_pos[j][0] == i[0] and i[0]!=0:
+                t+= abs(i[1]-estado_pos[j][1])
+                t+= abs(i[2]-estado_pos[j][2])
+    return t
+        
 
 
 
@@ -346,10 +367,9 @@ def h1_ocho_puzzle(estado):
 #              | 7 | H | 5 |
 #              +---+---+---+
 
-
-
-
-
+# >>> puzzle = Ocho_Puzzle((2,8,3,1,6,4,7,0,5))
+# >>> busqueda_coste_uniforme(puzzle).solucion()
+# ['Mover hueco arriba', 'Mover hueco arriba', 'Mover hueco izquierda', 'Mover hueco abajo', 'Mover hueco derecha']
 
 
 
@@ -368,9 +388,9 @@ def h1_ocho_puzzle(estado):
 class Problema_con_Analizados(Problema):
 
     """Es un problema que se comporta exactamente igual que el que recibe al
-       inicializarse, y además incorpora un atributos nuevos para almacenar el
+       inicializarse, y además incorpora unos atributos nuevos para almacenar el
        número de nodos analizados durante la búsqueda. De esta manera, no
-       tenemos que modificar el código del algorimo de búsqueda.""" 
+       tenemos que modificar el código del algoritmo de búsqueda.""" 
          
     def __init__(self, problema):
         self.estado_inicial = problema.estado_inicial
