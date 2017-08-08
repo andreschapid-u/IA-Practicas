@@ -281,16 +281,6 @@ class Ocho_Puzzle(Problema):
 from algoritmos_de_busqueda import *
 
 
-
-
-
-
-
-
-
-
-
-
 # -----------
 # Ejercicio 3
 # -----------
