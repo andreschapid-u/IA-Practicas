@@ -53,18 +53,33 @@ import random
 # de maximización o de minimización, ya que esto se especificará como
 # parámetro en el algoritmo genético que vamos a implementar. 
 
-
-        
-
-
-
-
-
-
-
-
-
-
+class Problema_Genetico(object):
+        def __init__(self,fun_dec,fun_muta , fun_cruza, fun_fitness):
+            self.fun_dec = fun_dec
+            self.fun_cruza = fun_cruza
+            self.fun_muta = fun_muta
+            self.fun_fitness = fun_fitness
+            """Constructor de la clase"""
+            
+        def longitud_individuos(self, cromosomas):
+            """Devuelve la longitud de los cromosomas"""
+                
+        def decodifica(self, genotipo):
+            """Devuelve el fenotipo a partir del genotipo"""
+            fenotipo = self.fun_dec(genotipo)
+            return fenotipo
+        def  muta(self, cromosoma,prob):
+            """Devuelve el cromosoma mutado"""   
+            mutante = self.fun_muta(cromosoma,prob)
+            return mutante
+        def cruza(self, cromosoma1, cromosoma2):         
+            """Devuelve el cruce de un par de cromosomas"""
+            cruce = self.fun_cruza(cromosoma1,cromosoma2)
+            return cruce 
+        def fitness(self, cromosoma):    
+            """Función de valoración"""
+            valoracion = self.fun_fitness(cromosoma)
+            return valoracion
 
 # -----------
 # Ejercicio 2
@@ -96,11 +111,29 @@ def binario_a_decimal(x):
 # >>> cuad_gen.cruza([1,0,0,0,1,1,0,0,1,0,1],[0,1,1,0,1,0,0,1,1,1])
 # [[1, 0, 0, 0, 1, 0, 0, 1, 1, 1], [0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1]]
 
+def fun_cruce_cuad(cromosoma1, cromosoma2):
+    """Cruza los cromosomas por la mitad"""
+    l1 = len(cromosoma1)
+    l2 = len(cromosoma2)
+    cruce1 = cromosoma1[0:l1/2]+cromosoma2[l1/2:l2]
+    cruce2 = cromosoma2[0:l2/2]+cromosoma1[l2/2:l1]
+    return [cruce1,cruce2]
+
+def fun_muta_cuad(cromosoma,prob):
+    """Elige un elemento al azar del cromosoma y lo modifica con una probabilidad igual a prob"""
+    l = len(cromosoma)
+    p = random.randint(0,l)
+    if prob > random.uniform(0,1):
+        cromosoma[p] =  (cromosoma[p]+1)%2
+    return cromosoma
+
+def fun_fitness_cuad(cromosoma):
+    """Función de valoración que eleva al cuadrado el número recibido en binario"""
+    n = binario_a_decimal(cromosoma)**2
+    return n
 
 
-
-
-
+cuad_gen = Problema_Genetico(binario_a_decimal,fun_muta_cuad ,fun_cruce_cuad, fun_fitness_cuad)
 
 
 # -----------
@@ -180,19 +213,18 @@ def binario_a_decimal(x):
 # algoritmos genéticos vistos en clase (el de selección por torneo,
 # diapositiva 41 del tema 5):
 
+# def algoritmo_genetico_t(problema_genetico,k,opt,ngen,tamaño,prop_cruces,prob_mutar):
+#    poblacion= poblacion_inicial(problema_genetico,tamaño)
+#    n_padres=round(tamaño*prop_cruces)
+#    n_padres= (n_padres if n_padres%2==0 else n_padres-1)
+#    n_directos= tamaño-n_padres
 
-def algoritmo_genetico_t(problema_genetico,k,opt,ngen,tamaño,prop_cruces,prob_mutar):
-    poblacion= poblacion_inicial(problema_genetico,tamaño)
-    n_padres=round(tamaño*prop_cruces)
-    n_padres= (n_padres if n_padres%2==0 else n_padres-1)
-    n_directos= tamaño-n_padres
+#    for _ in range(ngen):
+#        poblacion= nueva_generacion_t(problema_genetico,k,opt,poblacion,n_padres,n_directos,prob_mutar)
 
-    for _ in range(ngen):
-        poblacion= nueva_generacion_t(problema_genetico,k,opt,poblacion,n_padres,n_directos,prob_mutar)
-
-    mejor_cr= opt(poblacion, key=problema_genetico.fitness)
-    mejor=problema_genetico.decodifica(mejor_cr)
-    return (mejor,problema_genetico.fitness(mejor_cr)) 
+#    mejor_cr= opt(poblacion, key=problema_genetico.fitness)
+#    mejor=problema_genetico.decodifica(mejor_cr)
+#    return (mejor,problema_genetico.fitness(mejor_cr)) 
 
 
 # Sus argumentos de entrada son:
@@ -332,8 +364,8 @@ def algoritmo_genetico_t(problema_genetico,k,opt,ngen,tamaño,prop_cruces,prob_m
 # _______________________________________________________
 # Problema de la mochila 1:
 # 10 objetos, peso máximo 165
-pesos1 = [23,31,29,44,53,38,63,85,89,82]
-valores1 = [92,57,49,68,60,43,67,84,87,72]
+#pesos1 = [23,31,29,44,53,38,63,85,89,82]
+#valores1 = [92,57,49,68,60,43,67,84,87,72]
 
 # Solución óptima= [1,1,1,1,0,1,0,0,0,0], con valor 309
 # _______________________________________________________
@@ -342,8 +374,8 @@ valores1 = [92,57,49,68,60,43,67,84,87,72]
 # Problema de la mochila 2:
 # 15 objetos, peso máximo 750
 
-pesos2 = [70,73,77,80,82,87,90,94,98,106,110,113,115,118,120]
-valores2 = [135,139,149,150,156,163,173,184,192,201,210,214,221,229,240]
+#pesos2 = [70,73,77,80,82,87,90,94,98,106,110,113,115,118,120]
+#valores2 = [135,139,149,150,156,163,173,184,192,201,210,214,221,229,240]
 
 # Solución óptima= [1,0,1,0,1,0,1,1,1,0,0,0,0,1,1] con valor 1458
 # _______________________________________________________
@@ -352,13 +384,13 @@ valores2 = [135,139,149,150,156,163,173,184,192,201,210,214,221,229,240]
 # _______________________________________________________
 # Problema de la mochila 3:
 # 24 objetos, peso máximo 6404180
-pesos3 = [382745,799601,909247,729069,467902, 44328,
-       34610,698150,823460,903959,853665,551830,610856,
-       670702,488960,951111,323046,446298,931161, 31385,496951,264724,224916,169684]
-valores3 = [825594,1677009,1676628,1523970, 943972,  97426,
-       69666,1296457,1679693,1902996,
-       1844992,1049289,1252836,1319836, 953277,2067538, 675367,
-       853655,1826027, 65731, 901489, 577243, 466257, 369261]
+#pesos3 = [382745,799601,909247,729069,467902, 44328,
+#       34610,698150,823460,903959,853665,551830,610856,
+#       670702,488960,951111,323046,446298,931161, 31385,496951,264724,224916,169684]
+#valores3 = [825594,1677009,1676628,1523970, 943972,  97426,
+#       69666,1296457,1679693,1902996,
+#       1844992,1049289,1252836,1319836, 953277,2067538, 675367,
+#       853655,1826027, 65731, 901489, 577243, 466257, 369261]
 
 # Solución óptima= [1,1,0,1,1,1,0,0,0,1,1,0,1,0,0,1,0,0,0,0,0,1,1,1] con valoración 13549094
 
@@ -399,7 +431,3 @@ valores3 = [825594,1677009,1676628,1523970, 943972,  97426,
 # ([0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], 13366296)
 # >>> algoritmo_genetico_t(m3g,6,max,2000,100,0.75,0.1)
 # ([1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1], 13549094)
-
-
-
-
