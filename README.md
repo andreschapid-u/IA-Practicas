@@ -6,7 +6,9 @@ Resolución de prácticas en Python de la asignatura [Inteligencia Artificial](h
 
 1. [Práctica 1](https://github.com/EduPH/IA-Practicas/blob/master/practica-01.py): Introducción a Python.
 2. [Práctica 2](https://github.com/EduPH/IA-Practicas/blob/master/practica-02.py): Problema como espacio de estados.
-3. [Práctica 3](https://github.com/EduPH/IA-Practicas/blob/master/practica-03.py)
+3. [Práctica
+   3](https://github.com/EduPH/IA-Practicas/blob/master/practica-03.py):
+   Algoritmos genéticos.
 
 ## Pendientes:
 
