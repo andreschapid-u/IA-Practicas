@@ -39,7 +39,7 @@ import random
 # - genes: lista de genes usados en el genotipo de los estados.
 # - longitud_individuos: longitud de los cromosomas
 # - decodifica: función de obtiene el fenotipo a partir del genotipo.
-# - fitness: función 
+# - fitness: función de valoración.
 
 # Todos estos datos y funciones se almacenarán en sendos atributos de datos de
 # la clase. 
@@ -54,21 +54,20 @@ import random
 # parámetro en el algoritmo genético que vamos a implementar. 
 
 class Problema_Genetico(object):
-        def __init__(self,fun_dec,fun_muta , fun_cruza, fun_fitness):
+        def __init__(self, genes,fun_dec,fun_muta , fun_cruza, fun_fitness,longitud_individuos):
+            self.genes = genes
             self.fun_dec = fun_dec
             self.fun_cruza = fun_cruza
             self.fun_muta = fun_muta
             self.fun_fitness = fun_fitness
+            self.longitud_individuos = longitud_individuos
             """Constructor de la clase"""
-            
-        def longitud_individuos(self, cromosomas):
-            """Devuelve la longitud de los cromosomas"""
                 
         def decodifica(self, genotipo):
             """Devuelve el fenotipo a partir del genotipo"""
             fenotipo = self.fun_dec(genotipo)
             return fenotipo
-        def  muta(self, cromosoma,prob):
+        def muta(self, cromosoma,prob):
             """Devuelve el cromosoma mutado"""   
             mutante = self.fun_muta(cromosoma,prob)
             return mutante
@@ -133,7 +132,7 @@ def fun_fitness_cuad(cromosoma):
     return n
 
 
-cuad_gen = Problema_Genetico(binario_a_decimal,fun_muta_cuad ,fun_cruce_cuad, fun_fitness_cuad)
+cuad_gen = Problema_Genetico([0,1],binario_a_decimal,fun_muta_cuad ,fun_cruce_cuad, fun_fitness_cuad,10)
 
 
 # -----------
@@ -146,12 +145,15 @@ cuad_gen = Problema_Genetico(binario_a_decimal,fun_muta_cuad ,fun_cruce_cuad, fu
 
 # INDICACIÓN: Usar random.choice
 
+def poblacion_inicial(problema_genetico, size):
+    l = []
+    for i in range(size):
+        l.append([random.choice(problema_genetico.genes) for i in range(problema_genetico.longitud_individuos)])                
+    return l
 
-
-
-
-
-
+# Ejemplo:
+# >>> poblacion_inicial(cuad_gen,8)
+# [[1, 0, 1, 1, 1, 0, 0, 0, 1, 1], [0, 0, 0, 1, 1, 1, 0, 1, 0, 0], [0, 1, 1, 1, 0, 0, 1, 0, 0, 0], [0, 0, 1, 1, 1, 1, 1, 0, 1, 1], [0, 1, 0, 1, 0, 1, 1, 1, 1, 0], [0, 1, 1, 0, 0, 1, 0, 1, 0, 0], [0, 1, 1, 0, 0, 0, 0, 1, 0, 1], [1, 1, 0, 1, 0, 1, 1, 0, 0, 1]]
 # -----------
 # Ejercicio 4
 # -----------
@@ -161,11 +163,18 @@ cuad_gen = Problema_Genetico(binario_a_decimal,fun_muta_cuad ,fun_cruce_cuad, fu
 # que hay un número par de padres), obtiene la población resultante de
 # cruzarlos de dos en dos (en el orden en que aparecen)
 
+def cruza_padres(problema_genetico,padres):
+    l = []
+    l1 = len(padres)
+    while padres != []:
+        l.extend(problema_genetico.cruza(padres[0],padres[1]))
+        padres.pop(0)
+        padres.pop(0)
+    return l
 
-
-
-
-
+# Ejemplo
+# >>>  cruza_padres(cuad_gen,[[1, 0, 1, 1, 1, 0, 0, 0, 1, 1], [0, 0, 0, 1, 1, 1, 0, 1, 0, 0], [0, 1, 1, 1, 0, 0, 1, 0, 0, 0], [0, 0, 1, 1, 1, 1, 1, 0, 1, 1], [0, 1, 0, 1, 0, 1, 1, 1, 1, 0], [0, 1, 1, 0, 0, 1, 0, 1, 0, 0], [0, 1, 1, 0, 0, 0, 0, 1, 0, 1], [1, 1, 0, 1, 0, 1, 1, 0, 0, 1]])
+# [[1, 0, 1, 1, 1, 1, 0, 1, 0, 0], [0, 0, 0, 1, 1, 0, 0, 0, 1, 1], [0, 1, 1, 1, 0, 1, 1, 0, 1, 1], [0, 0, 1, 1, 1, 0, 1, 0, 0, 0], [0, 1, 0, 1, 0, 1, 0, 1, 0, 0], [0, 1, 1, 0, 0, 1, 1, 1, 1, 0], [0, 1, 1, 0, 0, 1, 1, 0, 0, 1], [1, 1, 0, 1, 0, 0, 0, 1, 0, 1]]
 
 # -----------
 # Ejercicio 5
@@ -176,14 +185,12 @@ cuad_gen = Problema_Genetico(binario_a_decimal,fun_muta_cuad ,fun_cruce_cuad, fu
 # probabilidad de mutación, obtiene la población resultante de aplicar
 # operaciones de mutación a cada individuo. 
 
+def muta_individuos(problema_genetico, poblacion, prob):
+    return [problema_genetico.muta(x,prob) for x in poblacion]
 
-
-
-
-
-
-
-
+# Ejemplo
+# >>> muta_individuos(cuad_gen,poblacion_inicial(cuad_gen,4),0.1)
+# [[1, 1, 0, 1, 1, 0, 1, 0, 0, 1], [1, 1, 1, 0, 0, 1, 1, 1, 0, 0], [1, 0, 0, 0, 1, 1, 1, 1, 1, 0], [0, 1, 0, 0, 0, 0, 1, 1, 1, 0]]
 # -----------
 # Ejercicio 6
 # -----------
