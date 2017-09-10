@@ -217,7 +217,7 @@ def seleccion_por_torneo(problema_genetico, poblacion, n, k, opt):
         seleccionado = opt(participantes, key=problema_genetico.fitness)
         opt(poblacion, key=problema_genetico.fitness)
         seleccionados.append(seleccionado)
-        poblacion.remove(seleccionado)
+        # poblacion.remove(seleccionado)
     return seleccionados  
 
 # Ejemplo
@@ -238,9 +238,9 @@ def algoritmo_genetico_t(problema_genetico,k,opt,ngen,size,prop_cruces,prob_muta
     poblacion= poblacion_inicial(problema_genetico,size)
     n_padres=round(size*prop_cruces)
     n_padres= int (n_padres if n_padres%2==0 else n_padres-1)
-
+    n_directos = size-n_padres
     for _ in range(ngen):
-        poblacion= nueva_generacion_t(problema_genetico,k,opt,poblacion,n_padres,prob_mutar)
+        poblacion= nueva_generacion_t(problema_genetico,k,opt,poblacion,n_padres, n_directos,prob_mutar)
 
     mejor_cr= opt(poblacion, key=problema_genetico.fitness)
     mejor=problema_genetico.decodifica(mejor_cr)
@@ -286,14 +286,17 @@ def prueba(problema_genetico,k,opt,ngen,size,prop_cruces,prob_mutar):
 # NOTA: téngase en cuenta que el algoritmo genético devuelve un par con el
 # mejor fenotipo encontrado, y su valoración.
 
-def nueva_generacion_t(problema_genetico, k,opt, poblacion, n_padres, prob_mutar):
-    padres = seleccion_por_torneo(problema_genetico, poblacion,n_padres , k, opt)
-    cruces =  cruza_padres(problema_genetico,padres)
-    generacion = cruces+poblacion
+def nueva_generacion_t(problema_genetico, k,opt, poblacion, n_padres, n_directos, prob_mutar):
+    padres2 = seleccion_por_torneo(problema_genetico, poblacion, n_directos, k,opt) 
+    padres1 = seleccion_por_torneo(problema_genetico, poblacion, n_padres , k, opt)
+    cruces =  cruza_padres(problema_genetico,padres1)
+    generacion = padres2+cruces
     resultado_mutaciones = muta_individuos(problema_genetico, generacion, prob_mutar)
     return resultado_mutaciones
+    
+# nueva_generacion_t(cuad_gen, 3, max,poblacion_inicial(cuad_gen,10), 6,4 ,0.1)
 
-# nueva_generacion_t(cuad_gen, 3, max,poblacion_inicial(cuad_gen,10), 6, 0.1)
+
 
 # ===================================================
 # Parte II: Representación del problema de la mochila
