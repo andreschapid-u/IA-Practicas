@@ -191,6 +191,8 @@ def muta_individuos(problema_genetico, poblacion, prob):
 # Ejemplo
 # >>> muta_individuos(cuad_gen,poblacion_inicial(cuad_gen,4),0.1)
 # [[1, 1, 0, 1, 1, 0, 1, 0, 0, 1], [1, 1, 1, 0, 0, 1, 1, 1, 0, 0], [1, 0, 0, 0, 1, 1, 1, 1, 1, 0], [0, 1, 0, 0, 0, 0, 1, 1, 1, 0]]
+
+
 # -----------
 # Ejercicio 6
 # -----------
@@ -207,9 +209,26 @@ def muta_individuos(problema_genetico, poblacion, prob):
 # INDICACIÓN: Usar random.sample 
 
 
+def fun_max(lista,fun):
+    seleccionado = lista[0]
+    for i in range(len(lista)):
+        if fun(seleccionado) < fun(lista[i]):
+            seleccionado = lista[i]
+    return seleccionado
+
+def seleccion_por_torneo(problema_genetico, poblacion, n, k, opt):
+    """Selección por torneo de n individuos de una población. Siendo k el nº de participantes
+        y opt la función max o min."""
+    seleccionados = []
+    for i in range(n):
+        participantes = random.sample(poblacion,k)
+        seleccionados.append(fun_max(participantes, opt))
+    return seleccionados
     
 
-
+# Ejemplo
+# >>> seleccion_por_torneo(cuad_gen, poblacion_inicial(cuad_gen,8),3,6,cuad_gen.fitness)seleccion_por_torneo(cuad_gen, poblacion_inicial(cuad_gen,8),3,6,cuad_gen.fitness)
+# [[1, 1, 0, 1, 1, 1, 1, 1, 0, 1], [1, 1, 0, 1, 1, 1, 1, 1, 0, 1], [0, 0, 1, 1, 0, 1, 1, 0, 1, 0]]
 
 
 
