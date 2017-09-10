@@ -121,7 +121,7 @@ def fun_cruce_cuad(cromosoma1, cromosoma2):
 def fun_muta_cuad(cromosoma,prob):
     """Elige un elemento al azar del cromosoma y lo modifica con una probabilidad igual a prob"""
     l = len(cromosoma)
-    p = random.randint(0,l)
+    p = random.randint(0,l-1)
     if prob > random.uniform(0,1):
         cromosoma[p] =  (cromosoma[p]+1)%2
     return cromosoma
@@ -208,28 +208,23 @@ def muta_individuos(problema_genetico, poblacion, prob):
 
 # INDICACIÓN: Usar random.sample 
 
-
-def fun_max(lista,fun):
-    seleccionado = lista[0]
-    for i in range(len(lista)):
-        if fun(seleccionado) < fun(lista[i]):
-            seleccionado = lista[i]
-    return seleccionado
-
 def seleccion_por_torneo(problema_genetico, poblacion, n, k, opt):
     """Selección por torneo de n individuos de una población. Siendo k el nº de participantes
         y opt la función max o min."""
     seleccionados = []
     for i in range(n):
         participantes = random.sample(poblacion,k)
-        seleccionados.append(fun_max(participantes, opt))
-    return seleccionados
-    
+        seleccionado = opt(participantes, key=problema_genetico.fitness)
+        opt(poblacion, key=problema_genetico.fitness)
+        seleccionados.append(seleccionado)
+        poblacion.remove(seleccionado)
+    return seleccionados  
 
 # Ejemplo
-# >>> seleccion_por_torneo(cuad_gen, poblacion_inicial(cuad_gen,8),3,6,cuad_gen.fitness)seleccion_por_torneo(cuad_gen, poblacion_inicial(cuad_gen,8),3,6,cuad_gen.fitness)
-# [[1, 1, 0, 1, 1, 1, 1, 1, 0, 1], [1, 1, 0, 1, 1, 1, 1, 1, 0, 1], [0, 0, 1, 1, 0, 1, 1, 0, 1, 0]]
-
+# >>> seleccion_por_torneo(cuad_gen, poblacion_inicial(cuad_gen,8),3,6,max)
+# [[1, 1, 1, 1, 1, 0, 0, 0, 1, 1], [1, 0, 0, 1, 1, 1, 0, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1, 1, 0, 1]]
+# seleccion_por_torneo(cuad_gen, poblacion_inicial(cuad_gen,8),3,6,min)
+# [[0, 0, 1, 1, 0, 1, 1, 0, 0, 0], [1, 0, 1, 0, 1, 1, 1, 0, 0, 0], [1, 1, 0, 1, 0, 0, 1, 0, 1, 0]]
 
 
 
@@ -242,11 +237,10 @@ def seleccion_por_torneo(problema_genetico, poblacion, n, k, opt):
 def algoritmo_genetico_t(problema_genetico,k,opt,ngen,size,prop_cruces,prob_mutar):
     poblacion= poblacion_inicial(problema_genetico,size)
     n_padres=round(size*prop_cruces)
-    n_padres= (n_padres if n_padres%2==0 else n_padres-1)
-    n_directos= size-n_padres
+    n_padres= int (n_padres if n_padres%2==0 else n_padres-1)
 
     for _ in range(ngen):
-        poblacion= nueva_generacion_t(problema_genetico,k,opt,poblacion,n_padres,n_directos,prob_mutar)
+        poblacion= nueva_generacion_t(problema_genetico,k,opt,poblacion,n_padres,prob_mutar)
 
     mejor_cr= opt(poblacion, key=problema_genetico.fitness)
     mejor=problema_genetico.decodifica(mejor_cr)
@@ -272,13 +266,17 @@ def algoritmo_genetico_t(problema_genetico,k,opt,ngen,size,prop_cruces,prob_muta
 
 # Se pide definir la única función auxiliar que queda por definir en el
 # algoritmo anterior; es decir, la función
-# nueva_generacion_t(problema_genetico,poblacion,n_padres,n_directos,prob_mutar)
+# nueva_generacion_t(problema_genetico,opt ,poblacion,n_padres ,prob_mutar)
 # que a partir de una población dada, calcula la siguiente generación.
 
 # Una vez definida, ejecutar el algoritmo genético anterior, para resolver el
 # problema cuad_gen (tanto en minimización como en maximización).
 
 # Por ejemplo:
+
+def prueba(problema_genetico,k,opt,ngen,size,prop_cruces,prob_mutar):
+    for i in range(100):
+        print(algoritmo_genetico_t(cuad_gen,3,min,20,10,0.7,0.1))
 
 # >>> algoritmo_genetico_t(cuad_gen,3,min,20,10,0.7,0.1)
 # (0, 0)
@@ -288,17 +286,14 @@ def algoritmo_genetico_t(problema_genetico,k,opt,ngen,size,prop_cruces,prob_muta
 # NOTA: téngase en cuenta que el algoritmo genético devuelve un par con el
 # mejor fenotipo encontrado, y su valoración.
 
+def nueva_generacion_t(problema_genetico, k,opt, poblacion, n_padres, prob_mutar):
+    padres = seleccion_por_torneo(problema_genetico, poblacion,n_padres , k, opt)
+    cruces =  cruza_padres(problema_genetico,padres)
+    generacion = cruces+poblacion
+    resultado_mutaciones = muta_individuos(problema_genetico, generacion, prob_mutar)
+    return resultado_mutaciones
 
-
-
-
-
-
-
-
-
-
-
+# nueva_generacion_t(cuad_gen, 3, max,poblacion_inicial(cuad_gen,10), 6, 0.1)
 
 # ===================================================
 # Parte II: Representación del problema de la mochila
