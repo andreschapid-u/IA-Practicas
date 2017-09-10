@@ -239,18 +239,18 @@ def seleccion_por_torneo(problema_genetico, poblacion, n, k, opt):
 # algoritmos genéticos vistos en clase (el de selección por torneo,
 # diapositiva 41 del tema 5):
 
-# def algoritmo_genetico_t(problema_genetico,k,opt,ngen,tamaño,prop_cruces,prob_mutar):
-#    poblacion= poblacion_inicial(problema_genetico,tamaño)
-#    n_padres=round(tamaño*prop_cruces)
-#    n_padres= (n_padres if n_padres%2==0 else n_padres-1)
-#    n_directos= tamaño-n_padres
+def algoritmo_genetico_t(problema_genetico,k,opt,ngen,size,prop_cruces,prob_mutar):
+    poblacion= poblacion_inicial(problema_genetico,size)
+    n_padres=round(size*prop_cruces)
+    n_padres= (n_padres if n_padres%2==0 else n_padres-1)
+    n_directos= size-n_padres
 
-#    for _ in range(ngen):
-#        poblacion= nueva_generacion_t(problema_genetico,k,opt,poblacion,n_padres,n_directos,prob_mutar)
+    for _ in range(ngen):
+        poblacion= nueva_generacion_t(problema_genetico,k,opt,poblacion,n_padres,n_directos,prob_mutar)
 
-#    mejor_cr= opt(poblacion, key=problema_genetico.fitness)
-#    mejor=problema_genetico.decodifica(mejor_cr)
-#    return (mejor,problema_genetico.fitness(mejor_cr)) 
+    mejor_cr= opt(poblacion, key=problema_genetico.fitness)
+    mejor=problema_genetico.decodifica(mejor_cr)
+    return (mejor,problema_genetico.fitness(mejor_cr)) 
 
 
 # Sus argumentos de entrada son:
@@ -261,7 +261,7 @@ def seleccion_por_torneo(problema_genetico, poblacion, n, k, opt):
 # * opt: max ó min, dependiendo si el problema es de maximización o de
 #   minimización. 
 # * ngen: número de generaciones (condición de terminación)
-# * tamaño: número de individuos en cada generación
+# * tamaño (size): número de individuos en cada generación
 # * prop_cruces: proporción del total de la población que serán padres. 
 # * prob_mutar: probabilidad de realizar una mutación de un gen.
 
