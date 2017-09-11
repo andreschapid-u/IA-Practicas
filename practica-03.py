@@ -110,7 +110,7 @@ def binario_a_decimal(x):
 # >>> cuad_gen.cruza([1,0,0,0,1,1,0,0,1,0,1],[0,1,1,0,1,0,0,1,1,1])
 # [[1, 0, 0, 0, 1, 0, 0, 1, 1, 1], [0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1]]
 
-def fun_cruce_cuad(cromosoma1, cromosoma2):
+def fun_cruzar(cromosoma1, cromosoma2):
     """Cruza los cromosomas por la mitad"""
     l1 = len(cromosoma1)
     l2 = len(cromosoma2)
@@ -118,7 +118,7 @@ def fun_cruce_cuad(cromosoma1, cromosoma2):
     cruce2 = cromosoma2[0:l2/2]+cromosoma1[l2/2:l1]
     return [cruce1,cruce2]
 
-def fun_muta_cuad(cromosoma,prob):
+def fun_mutar(cromosoma,prob):
     """Elige un elemento al azar del cromosoma y lo modifica con una probabilidad igual a prob"""
     l = len(cromosoma)
     p = random.randint(0,l-1)
@@ -132,7 +132,7 @@ def fun_fitness_cuad(cromosoma):
     return n
 
 
-cuad_gen = Problema_Genetico([0,1],binario_a_decimal,fun_muta_cuad ,fun_cruce_cuad, fun_fitness_cuad,10)
+cuad_gen = Problema_Genetico([0,1],binario_a_decimal,fun_mutar ,fun_cruzar, fun_fitness_cuad,10)
 
 
 # -----------
@@ -294,8 +294,8 @@ def nueva_generacion_t(problema_genetico, k,opt, poblacion, n_padres, n_directos
     resultado_mutaciones = muta_individuos(problema_genetico, generacion, prob_mutar)
     return resultado_mutaciones
     
-# nueva_generacion_t(cuad_gen, 3, max,poblacion_inicial(cuad_gen,10), 6,4 ,0.1)
-
+# >>> nueva_generacion_t(cuad_gen, 3, max,poblacion_inicial(cuad_gen,10), 6,4 ,0.1)
+# [[0, 0, 1, 1, 1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 1, 1, 1, 0, 1, 1], [1, 1, 0, 1, 0, 0, 0, 0, 1, 1], [1, 0, 1, 0, 1, 1, 1, 0, 1, 1], [0, 0, 1, 1, 0, 1, 1, 0, 1, 1], [1, 0, 1, 1, 1, 0, 0, 0, 1, 0], [1, 1, 0, 1, 0, 0, 1, 0, 1, 1], [0, 0, 1, 1, 1, 0, 0, 0, 1, 1], [1, 0, 1, 1, 0, 1, 0, 0, 0, 1], [0, 0, 0, 1, 1, 0, 1, 1, 1, 0]]
 
 
 # ===================================================
@@ -336,17 +336,20 @@ def nueva_generacion_t(problema_genetico, k,opt, poblacion, n_padres, n_directos
 # independientemente del valor que haya en su correspondiente posición de
 # cromosoma.  
 
+def decodifica_mochila(cromosoma, n_objetos, pesos, capacidad):
+    peso_en_mochila = 0
+    l = []
+    for i in range(n_objetos):
+        if cromosoma[i] == 1 and peso_en_mochila + pesos[i] <= capacidad:
+            l.append(1)
+            peso_en_mochila += pesos[i]
+        elif cromosoma[i]== 0 or peso_en_mochila + pesos[i] > capacidad:
+            l.append(0)
+    return l 
 
-
-
-
-
-
-
-
-
-
-
+# Ejemplo
+# >>> decodifica_mochila([1,1,0,1], 4, [18,2,8, 1], 20)
+# [1, 1, 0, 0]
 
 
 # -----------
@@ -358,23 +361,21 @@ def nueva_generacion_t(problema_genetico, k,opt, poblacion, n_padres, n_directos
 # fitness_mochila(cromosoma, n_objetos, pesos, capacidad, valores)
 
 # que devuelva el valor total de los objetos que están dentro de la mochila
-# que representa el cromosma, según la codificación explicada en el ejercicio
+# que representa el cromosoma, según la codificación explicada en el ejercicio
 # anterior. Aquí valores es la lista de los valores de cada objeto y el resto
 # de argumentos son los mismos que en el ejercicio anterior.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+def fitness_mochila(cromosoma, n_objetos, pesos, capacidad, valores):
+    objetos_en_mochila = decodifica_mochila(cromosoma, n_objetos, pesos, capacidad)
+    valor = 0
+    for i in range(n_objetos):
+        if objetos_en_mochila[i] == 1:
+            valor += valores[i]
+    return valor
+            
+# Ejemplo
+# >>> fitness_mochila([1,1,1,1],4,[18,2,8,1],20,[3,4,8,1])
+# 7
 
 # ============================================================
 # Parte III: Resolviendo instancias del problema de la mochila
@@ -388,18 +389,19 @@ def nueva_generacion_t(problema_genetico, k,opt, poblacion, n_padres, n_directos
 # _______________________________________________________
 # Problema de la mochila 1:
 # 10 objetos, peso máximo 165
-#pesos1 = [23,31,29,44,53,38,63,85,89,82]
-#valores1 = [92,57,49,68,60,43,67,84,87,72]
+pesos1 = [23,31,29,44,53,38,63,85,89,82]
+valores1 = [92,57,49,68,60,43,67,84,87,72]
 
 # Solución óptima= [1,1,1,1,0,1,0,0,0,0], con valor 309
 # _______________________________________________________
+
 
 # _______________________________________________________
 # Problema de la mochila 2:
 # 15 objetos, peso máximo 750
 
-#pesos2 = [70,73,77,80,82,87,90,94,98,106,110,113,115,118,120]
-#valores2 = [135,139,149,150,156,163,173,184,192,201,210,214,221,229,240]
+pesos2 = [70,73,77,80,82,87,90,94,98,106,110,113,115,118,120]
+valores2 = [135,139,149,150,156,163,173,184,192,201,210,214,221,229,240]
 
 # Solución óptima= [1,0,1,0,1,0,1,1,1,0,0,0,0,1,1] con valor 1458
 # _______________________________________________________
@@ -408,13 +410,13 @@ def nueva_generacion_t(problema_genetico, k,opt, poblacion, n_padres, n_directos
 # _______________________________________________________
 # Problema de la mochila 3:
 # 24 objetos, peso máximo 6404180
-#pesos3 = [382745,799601,909247,729069,467902, 44328,
-#       34610,698150,823460,903959,853665,551830,610856,
-#       670702,488960,951111,323046,446298,931161, 31385,496951,264724,224916,169684]
-#valores3 = [825594,1677009,1676628,1523970, 943972,  97426,
-#       69666,1296457,1679693,1902996,
-#       1844992,1049289,1252836,1319836, 953277,2067538, 675367,
-#       853655,1826027, 65731, 901489, 577243, 466257, 369261]
+pesos3 = [382745,799601,909247,729069,467902, 44328,
+       34610,698150,823460,903959,853665,551830,610856,
+       670702,488960,951111,323046,446298,931161, 31385,496951,264724,224916,169684]
+valores3 = [825594,1677009,1676628,1523970, 943972,  97426,
+       69666,1296457,1679693,1902996,
+       1844992,1049289,1252836,1319836, 953277,2067538, 675367,
+       853655,1826027, 65731, 901489, 577243, 466257, 369261]
 
 # Solución óptima= [1,1,0,1,1,1,0,0,0,1,1,0,1,0,0,1,0,0,0,0,0,1,1,1] con valoración 13549094
 
@@ -455,3 +457,29 @@ def nueva_generacion_t(problema_genetico, k,opt, poblacion, n_padres, n_directos
 # ([0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], 13366296)
 # >>> algoritmo_genetico_t(m3g,6,max,2000,100,0.75,0.1)
 # ([1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1], 13549094)
+
+
+def fitness_mochila_1(cromosoma):
+    v = fitness_mochila(cromosoma, 10, pesos1, 165, valores1)
+    return v
+def decodifica_mochila_1(cromosoma):
+    v = decodifica_mochila(cromosoma, 10, pesos1, 165)
+    return v
+m1g = Problema_Genetico([0,1], decodifica_mochila_1, fun_mutar, fun_cruzar, fitness_mochila_1,10)
+
+def fitness_mochila_2(cromosoma):
+    v = fitness_mochila(cromosoma, 15, pesos2, 750, valores2)
+    return v
+def decodifica_mochila_2(cromosoma):
+    v = decodifica_mochila(cromosoma, 14, pesos2, 750)
+    return v
+m2g = Problema_Genetico([0,1], decodifica_mochila_2, fun_mutar, fun_cruzar, fitness_mochila_2,15)
+
+def fitness_mochila_3(cromosoma):
+    v = fitness_mochila(cromosoma, 24, pesos3,6404180 , valores3)
+    return v
+def decodifica_mochila_3(cromosoma):
+    v = decodifica_mochila(cromosoma, 24, pesos3, 6404180)
+    return v
+m3g = Problema_Genetico([0,1], decodifica_mochila_3, fun_mutar, fun_cruzar, fitness_mochila_3,24)
+
